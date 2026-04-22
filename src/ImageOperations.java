@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 class ImageOperations {
 
     /**
-     * TODO.
+     *
      *
      * @param img TODO.
      * @return TODO.
@@ -39,39 +39,61 @@ class ImageOperations {
     }
 
     /**
-     * TODO.
-     *
-     * @param img TODO.
-     * @param dir TODO.
-     * @return TODO.
+     * mirrors image exactly either horizontally or vertically
+     * @param img the image that is being mirrored
+     * @param dir direction that the image is being mirrored (horizontal or vertical)
+     * @return a new mirrored image
      */
     static BufferedImage mirror(BufferedImage img, MirrorMenuItem.MirrorDirection dir) {
-        // TODO instantiate newImg with the *correct* dimensions.
+        int width = img.getWidth();
+        int height = img.getHeight();
+        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         BufferedImage newImg = null;
+
         if (dir == MirrorMenuItem.MirrorDirection.VERTICAL) {
-            // TODO mirror the image vertically.
-        } else {
-            // TODO mirror the image horizontally.
+            for (int row = 0; row < height; row++) {
+                for (int col = 0; col < width; col++) {
+                    int mirrorCol = width - 1 - col;
+                    result.setRGB(col, row, img.getRGB(mirrorCol, row));}
+            }
         }
-        return newImg;
+        else if (dir == MirrorMenuItem.MirrorDirection.HORIZONTAL) {
+            for (int row = 0; row < height; row++) {
+                for (int col = 0; col < width; col++) {
+                    int mirrorRow = height - 1 - row;
+                    result.setRGB(col, row, img.getRGB(col, mirrorRow));}
+            }
+        }return result;
     }
 
     /**
-     * TODO.
-     *
-     * @param img TODO.
-     * @param dir TODO.
-     * @return TODO.
+     * Rotates the image 90 degrees clockwise or counterclockwise
+     * @param img the image to be rotated
+     * @param dir the direction of rotation (either counterclockwise or clockwise)
+     * @return the rotated image
      */
     static BufferedImage rotate(BufferedImage img, RotateMenuItem.RotateDirection dir) {
-        // TODO instantiate newImg with the *correct* dimensions.
-        BufferedImage newImg = null;
-        if (dir == RotateMenuItem.RotateDirection.CLOCKWISE) {
-            // TODO rotate the image clockwise.
-        } else {
-            // TODO rotate the image counter-clockwise.
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        BufferedImage result = new BufferedImage(height, width, BufferedImage.TYPE_INT_RGB);
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+
+                if (dir == RotateMenuItem.RotateDirection.CLOCKWISE) {
+                    int newRow = col;
+                    int newCol = height - 1 - row;
+                    result.setRGB(newCol, newRow, img.getRGB(col, row));
+
+                } else {
+                    int newRow = width - 1 - col;
+                    int newCol = row;
+                    result.setRGB(newCol, newRow, img.getRGB(col, row));
+                }
+            }
         }
-        return newImg;
+        return result;
     }
 
     /**
