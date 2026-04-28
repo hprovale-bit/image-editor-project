@@ -40,11 +40,11 @@ public class WeatherForecast {
 
         StringBuilder response = new StringBuilder();
         String line;
-        //loop all returned data into a string using stringbuilder
+        //loop all returned data into a string using stringbuilder (read each line until no more data)
         while ((line = reader.readLine()) != null) {
             response.append(line);
         }
-
         reader.close();
+        //now response has all the JSON data returned by the API
     }
 }
