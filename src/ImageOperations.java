@@ -4,37 +4,74 @@ import java.awt.image.BufferedImage;
 class ImageOperations {
 
     /**
-     *
-     *
-     * @param img TODO.
-     * @return TODO.
+     * removes the red channel from every pixel in the image
+     * @param img the original image
+     * @return a new image with the red component of each pixel set to 0
      */
+
     static BufferedImage zeroRed(BufferedImage img) {
-        // TODO.
-        BufferedImage newImg = null;
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Color c = new Color(img.getRGB(col, row));
+                Color out = new Color(0, c.getGreen(), c.getBlue());
+                newImg.setRGB(col, row, out.getRGB());
+            }
+        }
         return newImg;
     }
 
     /**
-     * TODO.
-     *
-     * @param img TODO.
-     * @return TODO.
+     * converts the image to grayscale by averaging the red, green, and blue values
+     * of each pixel and setting all three channels to that average
+     * @param img the original image
+     * @return a new grayscale image
      */
+
     static BufferedImage grayscale(BufferedImage img) {
-        // TODO.
-        BufferedImage newImg = null;
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Color c = new Color(img.getRGB(col, row));
+                int gray = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+                Color out = new Color(gray, gray, gray);
+                newImg.setRGB(col, row, out.getRGB());
+            }
+        }
         return newImg;
     }
 
     /**
-     * TODO.
-     * @param img TODO.
-     * @return TODO.
+     * inverts the colors of the image by subtracting each RGB value from 255
+     * @param img the original image
+     * @return a new image with inverted colors
      */
+
     static BufferedImage invert(BufferedImage img) {
-        // TODO.
-        BufferedImage newImg = null;
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Color c = new Color(img.getRGB(col, row));
+                Color out = new Color(
+                        255 - c.getRed(),
+                        255 - c.getGreen(),
+                        255 - c.getBlue()
+                );
+                newImg.setRGB(col, row, out.getRGB());
+            }
+        }
         return newImg;
     }
 
@@ -44,6 +81,7 @@ class ImageOperations {
      * @param dir direction that the image is being mirrored (horizontal or vertical)
      * @return a new mirrored image
      */
+
     static BufferedImage mirror(BufferedImage img, MirrorMenuItem.MirrorDirection dir) {
         int width = img.getWidth();
         int height = img.getHeight();
@@ -72,6 +110,7 @@ class ImageOperations {
      * @param dir the direction of rotation (either counterclockwise or clockwise)
      * @return the rotated image
      */
+
     static BufferedImage rotate(BufferedImage img, RotateMenuItem.RotateDirection dir) {
         int width = img.getWidth();
         int height = img.getHeight();
@@ -97,20 +136,41 @@ class ImageOperations {
     }
 
     /**
-     * TODO.
-     *
-     * @param img TODO.
-     * @param n   TODO.
-     * @param dir TODO.
-     * @return TODO.
+     * repeats the image multiple times either horizontally or vertically
+     * @param img the original image
+     * @param n the number of times the image should be repeated
+     * @param dir the direction of repetition (horizontal/vertical)
+     * @return a new image with the original image repeated n times in the given direction
      */
+
     static BufferedImage repeat(BufferedImage img, int n, RepeatMenuItem.RepeatDirection dir) {
-        BufferedImage newImg = null;
-        // newImg must be instantiated in both branches with the correct dimensions.
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        BufferedImage newImg;
+
         if (dir == RepeatMenuItem.RepeatDirection.HORIZONTAL) {
-            // TODO repeat the image horizontally.
+            newImg = new BufferedImage(width * n, height, BufferedImage.TYPE_INT_RGB);
+
+            for (int row = 0; row < height; row++) {
+                for (int col = 0; col < width; col++) {
+                    int pixel = img.getRGB(col, row);
+                    for (int i = 0; i < n; i++) {
+                        newImg.setRGB(col + i * width, row, pixel);
+                    }
+                }
+            }
         } else {
-            // TODO repeat the image vertically.
+            newImg = new BufferedImage(width, height * n, BufferedImage.TYPE_INT_RGB);
+
+            for (int row = 0; row < height; row++) {
+                for (int col = 0; col < width; col++) {
+                    int pixel = img.getRGB(col, row);
+                    for (int i = 0; i < n; i++) {
+                        newImg.setRGB(col, row + i * height, pixel);
+                    }
+                }
+            }
         }
         return newImg;
     }
@@ -124,6 +184,7 @@ class ImageOperations {
      * @param zoomFactor The factor to zoom in by.
      * @return the zoomed in image.
      */
+
     static BufferedImage zoom(BufferedImage img, double zoomFactor) {
         int newImageWidth = (int) (img.getWidth() * zoomFactor);
         int newImageHeight = (int) (img.getHeight() * zoomFactor);
