@@ -1,3 +1,8 @@
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,5 +51,40 @@ public class WeatherForecast {
         }
         reader.close();
         //now response has all the JSON data returned by the API
+
+        //convert response to JSON
+        String json = response.toString();
+
+        JsonElement root = JsonParser.parseString(json);
+        JsonObject obj = root.getAsJsonObject();
+
+        //get hourly object
+        JsonObject hourly = obj.get("hourly").getAsJsonObject();
+
+        //extract arrays
+        JsonArray times = hourly.get("time").getAsJsonArray();
+        JsonArray temps = hourly.get("temperature_2m").getAsJsonArray();
+
+        //print forecast
+        System.out.println("7-Day Forecast in Fahrenheit:");
+
+        for (int day = 0; day < 7; day++) {
+
+            int startIndex = day * 24;
+
+            String date = times.get(startIndex).getAsString().substring(0, 10);
+
+            System.out.println("\nForecast for " + date + ":");
+
+            for (int i = startIndex; i < startIndex + 24; i += 3) {
+
+                String time = times.get(i).getAsString().substring(11, 16);
+                double temp = temps.get(i).getAsDouble();
+
+                System.out.printf("%s: %.1f°F\n", time, temp);
+            }
+        }
+
+        conn.disconnect();
     }
 }
