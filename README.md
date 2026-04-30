@@ -1,1 +1,1 @@
-# image-editor-project
+# mini-project-image-editor
